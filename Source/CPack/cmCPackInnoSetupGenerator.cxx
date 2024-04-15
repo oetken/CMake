@@ -25,11 +25,7 @@ cmCPackInnoSetupGenerator::~cmCPackInnoSetupGenerator() = default;
 bool cmCPackInnoSetupGenerator::CanGenerate()
 {
   // Inno Setup is only available for Windows
-#ifdef _WIN32
   return true;
-#else
-  return false;
-#endif
 }
 
 int cmCPackInnoSetupGenerator::InitializeInternal()
@@ -1138,7 +1134,11 @@ std::string cmCPackInnoSetupGenerator::Quote(const std::string& string)
 
 std::string cmCPackInnoSetupGenerator::QuotePath(const std::string& path)
 {
+#ifdef _WIN32
   return Quote(cmSystemTools::ConvertToWindowsOutputPath(path));
+#else
+  return Quote(cmSystemTools::ConvertToUnixOutputPath(path));
+#endif
 }
 
 std::string cmCPackInnoSetupGenerator::PrepareForConstant(
